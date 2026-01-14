@@ -1,0 +1,44 @@
+---
+title: "Exploratory Data Analysis of Bgee Data"
+author: "Andrew Hsu"
+output: html_document
+---
+
+```{r}
+require(data.table)
+require(BiocManager)
+
+BiocManager::install("biomaRt")
+require(biomaRt)
+
+
+humanData = fread(file="/Users/andrewhsu/Projects/McNair/data/Homo_sapiens_expr_advanced.tsv", sep="\t")
+mouseData = fread(file="/Users/andrewhsu/Projects/McNair/data/Mus_musculus_expr_advanced.tsv", sep="\t")
+
+# Shared Tissue
+humanTissue = unique(humanData$`Anatomical entity name`)
+mouseTissue = unique(mouseData$`Anatomical entity name`)
+
+commonTissues = intersect(humanTissue, mouseTissue)
+
+# Shared Genes
+humanMart = useMart("ensembl", "hsapiens_gene_ensembl", host = "https://dec2021.archive.ensembl.org/")
+mouseMart = useMart("ensembl", "mmusculus_gene_ensembl", host = "https://dec2021.archive.ensembl.org/")
+
+humanMouseOrtho = getLDS(
+    attributes=c("ensembl_gene_id", "external_gene_name"),
+    filters = "ensembl_gene_id",
+    values = unique(humanData$`Gene ID`),
+    mart = humanMart,
+    attributesL=c("ensembl_gene_id", "external_gene_name"),
+    martL = mouseMart
+)
+
+colnames(humanMouseOrtho) = c("Human Gene ID", "Human Gene Name", "Mouse Gene ID", "Mouse Gene Name")
+
+validHumanGenes = humanMouseOrtho$`Human Gene ID`
+validMouseGenes = humanMouseOrtho$`Mouse Gene ID`
+
+humanOrtho = humanData[humanData$`Gene ID` %in% validHumanGenes,]
+mouseOrtho = mouseData[mouseData$`Gene ID` %in% validMouseGenes,]
+```
