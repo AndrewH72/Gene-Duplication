@@ -7,8 +7,6 @@ output: html_document
 ```{r}
 require(data.table)
 require(BiocManager)
-
-BiocManager::install("biomaRt")
 require(biomaRt)
 
 
@@ -41,4 +39,41 @@ validMouseGenes = humanMouseOrtho$`Mouse Gene ID`
 
 humanOrtho = humanData[humanData$`Gene ID` %in% validHumanGenes,]
 mouseOrtho = mouseData[mouseData$`Gene ID` %in% validMouseGenes,]
+
+fwrite(humanOrtho, file="/Users/andrewhsu/Projects/McNair/data/humanOrthoGenes.csv")
+fwrite(mouseOrtho, file="/Users/andrewhsu/Projects/McNair/data/mouseOrthoGenes.csv")
+```
+
+
+```{r}
+# Creating a table of Genes and Cell Types
+require(data.table)
+require(dplyr)
+require(tidyr)
+
+humanData = fread(file="/Users/andrewhsu/Projects/McNair/data/Homo_sapiens_expr_advanced.tsv", sep="\t")
+mouseData = fread(file="/Users/andrewhsu/Projects/McNair/data/Mus_musculus_expr_advanced.tsv", sep="\t")
+
+# Genes and Tissues (For One Species Only)
+humanGenesAndCellType = humanData |>
+    mutate(present=TRUE) |>
+    distinct() |>
+    pivot_wider(
+        id_cols = `Gene ID`,
+        names_from = `Anatomical entity name`,
+        values_from = present,
+        values_fill = FALSE
+    )
+
+mouseGenesAndCellType = mouseData |>
+    mutate(present=TRUE) |>
+    distinct() |>
+    pivot_wider(
+        id_cols = `Gene ID`,
+        names_from = `Anatomical entity name`,
+        values_from = present,
+        values_fill = FALSE
+    )
+fwrite(humanGenesAndCellType, file="/Users/andrewhsu/Projects/McNair/data/humanGenesAndCellType.csv")
+fwrite(mouseGenesAndCellType, file="/Users/andrewhsu/Projects/McNair/data/mouseGenesAndCellType.csv")
 ```
