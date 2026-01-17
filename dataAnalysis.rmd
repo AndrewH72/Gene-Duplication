@@ -8,6 +8,7 @@ output: html_document
 require(data.table)
 require(BiocManager)
 require(biomaRt)
+require(dplyr)
 
 
 humanData = fread(file="/Users/andrewhsu/Projects/McNair/data/Homo_sapiens_expr_advanced.tsv", sep="\t")
@@ -33,7 +34,9 @@ humanMouseOrtho = getLDS(
 )
 
 colnames(humanMouseOrtho) = c("Human Gene ID", "Human Gene Name", "Mouse Gene ID", "Mouse Gene Name")
+humanMouseGeneTable = humanMouseOrtho[, -c(2, 4)]
 
+# Orthogonal Genes
 validHumanGenes = humanMouseOrtho$`Human Gene ID`
 validMouseGenes = humanMouseOrtho$`Mouse Gene ID`
 
@@ -42,6 +45,17 @@ mouseOrtho = mouseData[mouseData$`Gene ID` %in% validMouseGenes,]
 
 fwrite(humanOrtho, file="/Users/andrewhsu/Projects/McNair/data/humanOrthoGenes.csv")
 fwrite(mouseOrtho, file="/Users/andrewhsu/Projects/McNair/data/mouseOrthoGenes.csv")
+
+# Orthogonal Genes with Other Species' Genes
+humanOrthoWithMouse = merge(humanData, humanMouseGeneTable, by.x="Gene ID", by.y="Human Gene ID")
+humanOrthoWithMouse = humanOrthoWithMouse |> relocate("Mouse Gene ID", .after="Gene ID")
+
+mouseOrthoWithHuman = merge(mouseData, humanMouseGeneTable, by.x="Gene ID", by.y="Mouse Gene ID")
+mouseOrthoWithHuman = mouseOrthoWithHuman |> relocate("Human Gene ID", .after="Gene ID")
+
+fwrite(humanOrthoWithMouse, file="/Users/andrewhsu/Projects/McNair/data/humanOrthoWithMouseGenes.csv")
+fwrite(mouseOrthoWithHuman, file="/Users/andrewhsu/Projects/McNair/data/mouseOrthoWithHumanGenes.csv")
+
 ```
 
 
@@ -54,7 +68,12 @@ require(tidyr)
 humanData = fread(file="/Users/andrewhsu/Projects/McNair/data/Homo_sapiens_expr_advanced.tsv", sep="\t")
 mouseData = fread(file="/Users/andrewhsu/Projects/McNair/data/Mus_musculus_expr_advanced.tsv", sep="\t")
 
-# Genes and Tissues (For One Species Only)
+humanOrthoWithMouse = fread(file="/Users/andrewhsu/Projects/McNair/data/humanOrthoWithMouseGenes.csv")
+mouseOrthoWithHuman = fread(file="/Users/andrewhsu/Projects/McNair/data/mouseOrthoWithHumanGenes.csv")
+
+sharedCellTypes = intersect(unique(humanData$`Anatomical entity name`), unique(mouseData$`Anatomical entity name`))
+
+# Genes and Tissues (For All Genes)
 humanGenesAndCellType = humanData |>
     mutate(present=TRUE) |>
     distinct() |>
@@ -74,6 +93,39 @@ mouseGenesAndCellType = mouseData |>
         values_from = present,
         values_fill = FALSE
     )
+
 fwrite(humanGenesAndCellType, file="/Users/andrewhsu/Projects/McNair/data/humanGenesAndCellType.csv")
 fwrite(mouseGenesAndCellType, file="/Users/andrewhsu/Projects/McNair/data/mouseGenesAndCellType.csv")
+
+# Genes and Tissues (For Orthogonal Genes)
+humanMouseOrthoGenesAndCellTypes = humanOrthoWithMouse |>
+    select(`Gene ID`, `Anatomical entity name`) |>
+    mutate(present=TRUE) |>
+    distinct() |>
+    pivot_wider(
+        id_cols = `Gene ID`,
+        names_from = `Anatomical entity name`,
+        values_from = present,
+        values_fill = FALSE
+    )
+mouseHumanOrthoGenesAndCellTypes = mouseOrthoWithHuman |>
+    select(`Gene ID`, `Anatomical entity name`) |>
+    mutate(present=TRUE) |>
+    distinct() |>
+    pivot_wider(
+        id_cols = `Gene ID`,
+        names_from = `Anatomical entity name`,
+        values_from = present,
+        values_fill = FALSE
+    )
+
+fwrite(humanMouseOrthoGenesAndCellTypes, file="/Users/andrewhsu/Projects/McNair/data/humanMouseOrthoGenesAndCellType.csv")
+fwrite(mouseHumanOrthoGenesAndCellTypes, file="/Users/andrewhsu/Projects/McNair/data/mouseHumanOrthoGenesAndCellType.csv")
+
+humanMouseOrthoGenesAndSharedCellTypes = humanMouseOrthoGenesAndCellTypes[, colnames(humanMouseOrthoGenesAndCellTypes) %in% sharedCellTypes]
+mouseHumanOrthoGenesAndSharedCellTypes = mouseHumanOrthoGenesAndCellTypes[, colnames(mouseHumanOrthoGenesAndCellTypes) %in% sharedCellTypes]
+
+fwrite(humanMouseOrthoGenesAndCellTypes, file="/Users/andrewhsu/Projects/McNair/data/humanMouseOrthoGenesAndSharedCellType.csv")
+fwrite(mouseHumanOrthoGenesAndCellTypes, file="/Users/andrewhsu/Projects/McNair/data/mouseHumanOrthoGenesAndSharedCellType.csv")
+
 ```
