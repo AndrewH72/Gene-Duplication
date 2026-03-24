@@ -1,0 +1,135 @@
+---
+title: "Identifying the Best Dataset for the Project"
+author: "Andrew Hsu"
+output: html_document
+---
+
+
+```{r}
+#Bgee Dataset (Filtering Based on Mouse)
+require(data.table)
+require(dplyr)
+require(tidyr)
+
+humanData = fread("/Users/andrewhsu/Projects/McNair/data/Bgee/Homo_sapiens_expr_advanced.tsv")
+mouseData = fread("/Users/andrewhsu/Projects/McNair/data/Bgee/Mus_musculus_expr_advanced.tsv")
+humanMouseOrthos = fread("/Users/andrewhsu/Projects/McNair/data/mart_export.txt")
+
+# Genes x Tissues
+commonTissues = intersect(humanData$`Anatomical entity name`, mouseData$`Anatomical entity name`)
+
+genesByTissueHuman = humanData |> 
+    select(`Gene ID`, `Anatomical entity name`, `Expression`) |> 
+    pivot_wider(id_cols=`Gene ID`, names_from=`Anatomical entity name`, values_from=`Expression`) |>
+    select(c("Gene ID", all_of(commonTissues)))
+
+genesByTissueMouse = mouseData |> 
+    select(`Gene ID`, `Anatomical entity name`, `Expression`) |> 
+    pivot_wider(id_cols=`Gene ID`, names_from=`Anatomical entity name`, values_from=`Expression`) |>
+    select(c("Gene ID", all_of(commonTissues)))
+
+maxMouse = c(0)
+maxMouseIdx = c(0)
+maxHuman = c(0)
+maxHumanIdx = c(0)
+leastNAsMouse = names(sort(colSums(!is.na(genesByTissueMouse)), decreasing=TRUE))
+plot(1:210, ylim=c(1, nrow(genesByTissueMouse)), type="n", xlab="Columns Grabbed", ylab="Number of Rows", main="Rows vs Cols")
+for(i in 2:210){
+    filteredGenesByTissueMouse = genesByTissueMouse[, leastNAsMouse[1:i]]
+    filteredGenesByTissueMouse = filteredGenesByTissueMouse[complete.cases(filteredGenesByTissueMouse), ]
+    numRowsMouse = nrow(filteredGenesByTissueMouse)
+    points(i, numRowsMouse, col="blue", pch=15)
+    if(numRowsMouse >= maxMouse[1] - 30000){
+        maxMouse = c(numRowsMouse, maxMouse)
+        maxMouseIdx = c(i, maxMouseIdx)
+    }
+    
+    filteredGenesByTissueHuman = genesByTissueHuman[, colnames(filteredGenesByTissueMouse)]
+    filteredGenesByTissueHuman = filteredGenesByTissueHuman[complete.cases(filteredGenesByTissueHuman), ]
+    numRowsHuman = nrow(filteredGenesByTissueHuman)
+    points(i, numRowsHuman, col="red", pch=16)
+    if(numRowsHuman >= maxHuman[1] - 10000){
+        maxHuman = c(numRowsHuman, maxHuman)
+        maxHumanIdx = c(i, maxHumanIdx)
+    }
+}
+cat("Max Human Rows", max(maxHuman), "at", maxHumanIdx[which.max(maxHuman)], "\n")
+cat("Max Mouse Rows", max(maxMouse), "at", maxMouseIdx[which.max(maxMouse)])
+
+
+filteredGenesByTissueHuman = genesByTissueHuman[, leastNAsMouse[1:9]]
+filteredGenesByTissueHuman = filteredGenesByTissueHuman[complete.cases(filteredGenesByTissueHuman), ]
+# filteredGenesByTissueHuman = filteredGenesByTissueHuman[filteredGenesByTissueHuman$`Gene ID` %in% humanMouseOrthogs$`Gene stable ID`,]
+
+filteredGenesByTissueMouse = genesByTissueMouse[, leastNAsMouse[1:9]]
+filteredGenesByTissueMouse = filteredGenesByTissueMouse[complete.cases(filteredGenesByTissueMouse), ]
+# filteredGenesByTissueMouse = filteredGenesByTissueMouse[filteredGenesByTissueMouse$`Gene ID` %in% humanMouseOrthogs$`Mouse gene stable ID`,]
+
+cat("Human Data: ", "(", nrow(filteredGenesByTissueHuman), ", ", ncol(filteredGenesByTissueHuman), ")\n", sep="")
+cat("Mouse Data: ", "(", nrow(filteredGenesByTissueMouse), ", ", ncol(filteredGenesByTissueMouse), ")", sep="")
+```
+
+
+```{r}
+#Bgee Dataset (Filtering Based on Human)
+require(data.table)
+require(dplyr)
+require(tidyr)
+
+humanData = fread("/Users/andrewhsu/Projects/McNair/data/Bgee/Homo_sapiens_expr_advanced.tsv")
+mouseData = fread("/Users/andrewhsu/Projects/McNair/data/Bgee/Mus_musculus_expr_advanced.tsv")
+humanMouseOrthos = fread("/Users/andrewhsu/Projects/McNair/data/mart_export.txt")
+
+# Genes x Tissues
+commonTissues = intersect(humanData$`Anatomical entity name`, mouseData$`Anatomical entity name`)
+
+genesByTissueHuman = humanData |> 
+    select(`Gene ID`, `Anatomical entity name`, `Expression`) |> 
+    pivot_wider(id_cols=`Gene ID`, names_from=`Anatomical entity name`, values_from=`Expression`) |>
+    select(c("Gene ID", all_of(commonTissues)))
+
+genesByTissueMouse = mouseData |> 
+    select(`Gene ID`, `Anatomical entity name`, `Expression`) |> 
+    pivot_wider(id_cols=`Gene ID`, names_from=`Anatomical entity name`, values_from=`Expression`) |>
+    select(c("Gene ID", all_of(commonTissues)))
+
+maxMouse = c(0)
+maxMouseIdx = c(0)
+maxHuman = c(0)
+maxHumanIdx = c(0)
+leastNAsHuman = names(sort(colSums(!is.na(genesByTissueHuman)), decreasing=TRUE))
+plot(1:210, ylim=c(1, nrow(genesByTissueHuman)), type="n", xlab="Columns Grabbed", ylab="Number of Rows", main="Rows vs Cols")
+for(i in 2:210){
+    filteredGenesByTissueHuman = genesByTissueHuman[, leastNAsHuman[1:i]]
+    filteredGenesByTissueHuman = filteredGenesByTissueHuman[complete.cases(filteredGenesByTissueHuman), ]
+    numRowsHuman = nrow(filteredGenesByTissueHuman)
+    points(i, numRowsHuman, col="blue", pch=15)
+    if(numRowsHuman >= maxHuman[1]){
+        maxHuman = c(numRowsHuman, maxHuman)
+        maxHumanIdx = c(i, maxHumanIdx)
+    }
+    
+    filteredGenesByTissueMouse = genesByTissueMouse[, colnames(filteredGenesByTissueHuman)]
+    filteredGenesByTissueMouse = filteredGenesByTissueMouse[complete.cases(filteredGenesByTissueMouse), ]
+    numRowsMouse = nrow(filteredGenesByTissueMouse)
+    points(i, numRowsMouse, col="red", pch=16)
+    if(numRowsMouse >= maxMouse[1]){
+        maxMouse = c(numRowsMouse, maxMouse)
+        maxMouseIdx = c(i, maxMouseIdx)
+    }
+}
+cat("Max Human Rows", max(maxHuman), "at", maxHumanIdx[which.max(maxHuman)], "\n")
+cat("Max Mouse Rows", max(maxMouse), "at", maxMouseIdx[which.max(maxMouse)])
+
+
+filteredGenesByTissueHuman = genesByTissueHuman[, leastNAsHuman[1:6]]
+filteredGenesByTissueHuman = filteredGenesByTissueHuman[complete.cases(filteredGenesByTissueHuman), ]
+# filteredGenesByTissueHuman = filteredGenesByTissueHuman[filteredGenesByTissueHuman$`Gene ID` %in% humanMouseOrthogs$`Gene stable ID`,]
+
+filteredGenesByTissueMouse = genesByTissueMouse[, leastNAsHuman[1:6]]
+filteredGenesByTissueMouse = filteredGenesByTissueMouse[complete.cases(filteredGenesByTissueMouse), ]
+# filteredGenesByTissueMouse = filteredGenesByTissueMouse[filteredGenesByTissueMouse$`Gene ID` %in% humanMouseOrthogs$`Mouse gene stable ID`,]
+
+cat("Human Data: ", "(", nrow(filteredGenesByTissueHuman), ", ", ncol(filteredGenesByTissueHuman), ")\n", sep="")
+cat("Mouse Data: ", "(", nrow(filteredGenesByTissueMouse), ", ", ncol(filteredGenesByTissueMouse), ")", sep="")
+```

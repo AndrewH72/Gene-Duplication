@@ -1,0 +1,131 @@
+---
+title: "Exploratory Data Analysis of Bgee Data"
+author: "Andrew Hsu"
+output: html_document
+---
+
+```{r}
+require(data.table)
+require(BiocManager)
+require(biomaRt)
+require(dplyr)
+
+
+hmeumanData = fread(file="/Users/andrewhsu/Projects/McNair/data/Homo_sapiens_expr_advanced.tsv", sep="\t")
+mouseData = fread(file="/Users/andrewhsu/Projects/McNair/data/Mus_musculus_expr_advanced.tsv", sep="\t")
+
+# Shared Tissue
+humanTissue = unique(humanData$`Anatomical entity name`)
+mouseTissue = unique(mouseData$`Anatomical entity name`)
+
+commonTissues = intersect(humanTissue, mouseTissue)
+
+# Shared Genes
+humanMart = useMart("ensembl", "hsapiens_gene_ensembl", host = "https://dec2021.archive.ensembl.org/")
+mouseMart = useMart("ensembl", "mmusculus_gene_ensembl", host = "https://dec2021.archive.ensembl.org/")
+
+humanMouseOrtho = getLDS(
+    attributes=c("ensembl_gene_id", "external_gene_name"),
+    filters = "ensembl_gene_id",
+    values = unique(humanData$`Gene ID`),
+    mart = humanMart,
+    attributesL=c("ensembl_gene_id", "external_gene_name"),
+    martL = mouseMart
+)
+
+colnames(humanMouseOrtho) = c("Human Gene ID", "Human Gene Name", "Mouse Gene ID", "Mouse Gene Name")
+humanMouseGeneTable = humanMouseOrtho[, -c(2, 4)]
+
+# Orthogonal Genes
+validHumanGenes = humanMouseOrtho$`Human Gene ID`
+validMouseGenes = humanMouseOrtho$`Mouse Gene ID`
+
+humanOrtho = humanData[humanData$`Gene ID` %in% validHumanGenes,]
+mouseOrtho = mouseData[mouseData$`Gene ID` %in% validMouseGenes,]
+
+fwrite(humanOrtho, file="/Users/andrewhsu/Projects/McNair/data/humanOrthoGenes.csv")
+fwrite(mouseOrtho, file="/Users/andrewhsu/Projects/McNair/data/mouseOrthoGenes.csv")
+
+# Orthogonal Genes with Other Species' Genes
+humanOrthoWithMouse = merge(humanData, humanMouseGeneTable, by.x="Gene ID", by.y="Human Gene ID")
+humanOrthoWithMouse = humanOrthoWithMouse |> relocate("Mouse Gene ID", .after="Gene ID")
+
+mouseOrthoWithHuman = merge(mouseData, humanMouseGeneTable, by.x="Gene ID", by.y="Mouse Gene ID")
+mouseOrthoWithHuman = mouseOrthoWithHuman |> relocate("Human Gene ID", .after="Gene ID")
+
+fwrite(humanOrthoWithMouse, file="/Users/andrewhsu/Projects/McNair/data/humanOrthoWithMouseGenes.csv")
+fwrite(mouseOrthoWithHuman, file="/Users/andrewhsu/Projects/McNair/data/mouseOrthoWithHumanGenes.csv")
+
+```
+
+
+```{r}
+# Creating a table of Genes and Cell Types
+require(data.table)
+require(dplyr)
+require(tidyr)
+
+humanData = fread(file="/Users/andrewhsu/Projects/McNair/data/Homo_sapiens_expr_advanced.tsv", sep="\t")
+mouseData = fread(file="/Users/andrewhsu/Projects/McNair/data/Mus_musculus_expr_advanced.tsv", sep="\t")
+
+humanOrthoWithMouse = fread(file="/Users/andrewhsu/Projects/McNair/data/humanOrthoWithMouseGenes.csv")
+mouseOrthoWithHuman = fread(file="/Users/andrewhsu/Projects/McNair/data/mouseOrthoWithHumanGenes.csv")
+
+sharedCellTypes = intersect(unique(humanData$`Anatomical entity name`), unique(mouseData$`Anatomical entity name`))
+
+# Genes and Tissues (For All Genes)
+humanGenesAndCellType = humanData |>
+    mutate(present=TRUE) |>
+    distinct() |>
+    pivot_wider(
+        id_cols = `Gene ID`,
+        names_from = `Anatomical entity name`,
+        values_from = present,
+        values_fill = FALSE
+    )
+
+mouseGenesAndCellType = mouseData |>
+    mutate(present=TRUE) |>
+    distinct() |>
+    pivot_wider(
+        id_cols = `Gene ID`,
+        names_from = `Anatomical entity name`,
+        values_from = present,
+        values_fill = FALSE
+    )
+
+fwrite(humanGenesAndCellType, file="/Users/andrewhsu/Projects/McNair/data/humanGenesAndCellType.csv")
+fwrite(mouseGenesAndCellType, file="/Users/andrewhsu/Projects/McNair/data/mouseGenesAndCellType.csv")
+
+# Genes and Tissues (For Orthogonal Genes)
+humanMouseOrthoGenesAndCellTypes = humanOrthoWithMouse |>
+    select(`Gene ID`, `Anatomical entity name`) |>
+    mutate(present=TRUE) |>
+    distinct() |>
+    pivot_wider(
+        id_cols = `Gene ID`,
+        names_from = `Anatomical entity name`,
+        values_from = present,
+        values_fill = FALSE
+    )
+mouseHumanOrthoGenesAndCellTypes = mouseOrthoWithHuman |>
+    select(`Gene ID`, `Anatomical entity name`) |>
+    mutate(present=TRUE) |>
+    distinct() |>
+    pivot_wider(
+        id_cols = `Gene ID`,
+        names_from = `Anatomical entity name`,
+        values_from = present,
+        values_fill = FALSE
+    )
+
+fwrite(humanMouseOrthoGenesAndCellTypes, file="/Users/andrewhsu/Projects/McNair/data/humanMouseOrthoGenesAndCellType.csv")
+fwrite(mouseHumanOrthoGenesAndCellTypes, file="/Users/andrewhsu/Projects/McNair/data/mouseHumanOrthoGenesAndCellType.csv")
+
+humanMouseOrthoGenesAndSharedCellTypes = humanMouseOrthoGenesAndCellTypes[, colnames(humanMouseOrthoGenesAndCellTypes) %in% sharedCellTypes]
+mouseHumanOrthoGenesAndSharedCellTypes = mouseHumanOrthoGenesAndCellTypes[, colnames(mouseHumanOrthoGenesAndCellTypes) %in% sharedCellTypes]
+
+fwrite(humanMouseOrthoGenesAndCellTypes, file="/Users/andrewhsu/Projects/McNair/data/humanMouseOrthoGenesAndSharedCellType.csv")
+fwrite(mouseHumanOrthoGenesAndCellTypes, file="/Users/andrewhsu/Projects/McNair/data/mouseHumanOrthoGenesAndSharedCellType.csv")
+
+```
