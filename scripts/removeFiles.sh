@@ -7,11 +7,11 @@ HUMAN_TISSUES="/Users/andrewhsu/Projects/McNair/data/humanData.csv"
 echo "Starting file processing in $DIRECTORY."
 echo "Reading human tissues."
 
-awk -F',' 'NR > 1 && !seen[$NF]++ {print $NF}' "$HUMAN_TISSUES" >> "$UNIQUE_TISSUES"
+awk -F',' 'NR > 1 {print tolower($NF)}' "$HUMAN_TISSUES" | sort -u >> "$UNIQUE_TISSUES"
 echo "Processing gxdrnaseq files."
 find "$DIRECTORY" -type f -print0 | while IFS= read -r -d '' file; do
     value=$(awk -F'|' 'NR > 1 {print $6; exit}' "$file")
-    if grep -F -x -q "$value" "$UNIQUE_TISSUES"; then
+    if ! grep -F -x -q "$value" "$UNIQUE_TISSUES"; then
         echo "Deleting $file"
         rm "$file"
     fi

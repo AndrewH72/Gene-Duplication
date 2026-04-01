@@ -1,0 +1,51 @@
+humanData.csv (30 tissues):
+Adipose Tissue
+Adrenal Gland
+Bladder
+Blood
+Blood Vessel
+Brain
+Breast
+Cervix Uteri
+Colon
+Esophagus
+Fallopian Tube
+Heart
+Kidney
+Liver
+Lung
+Muscle
+Nerve
+Ovary
+Pancreas
+Pituitary
+Prostate
+Salivary Gland
+Skin
+Small Intestine
+Spleen
+Stomach
+Testis
+Thyroid
+Uterus
+Vagina
+
+gxdrnaseq (18 tissues):
+brain
+colon
+heart
+heart left ventricle
+hippocampus
+liver
+lung
+metanephros
+prefrontal cortex
+preoptic area
+skin
+small intestine
+spermatid
+spermatocyte
+spinal cord
+spleen
+testis
+thymus
