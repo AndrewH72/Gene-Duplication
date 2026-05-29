@@ -27,7 +27,11 @@ The repeats in tissues for E-MTAB-6081 are because they correspond to different 
 - Try to calcualte the tissue expression divergence scores.
 
 # May 29, 2026
-I identified the number of genes that were dropped (43) and the genes that were dropped for GTEx. Those can be found in the droppedGenes.txt file. I ran all of these genes on BioMart, and nothing came up. I looked up one of the genes, ENSG00000287139, and Ensembl says "this identifier is not in the current EnsEMBL database" and the ID is retired. The same thing is true for the genes that were dropped for E-MTAB-6081. There were 4,143 genes that were dropped. This was before I filtered for protein-coding genes.
+I identified the number of genes that were dropped (43) and the genes that were dropped for GTEx. Those can be found in the droppedGenes.txt file. I ran all of these genes on BioMart, and nothing came up. I looked up one of the genes, ENSG00000287139, and Ensembl says "this identifier is not in the current EnsEMBL database" and the ID is retired. The same thing is true for the genes that were dropped for E-MTAB-6081. There were 4,143 genes that were dropped. This was before I filtered for protein-coding genes.\
+
+I put the genes that were dropped back by changing the merge from an inner to outer.\
+
+Mice used in E-MTAB-6081 were 7-8 weeks olds. Mice begin their adulthood at just 6-weeks, so these mice were adults. The GTEx data came from the Adult GTEx portal, so all samples are also adults.
 
 ## Notes
 - Keep as many genes as possible. Don't drop genes.
