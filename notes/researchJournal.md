@@ -1,0 +1,35 @@
+# May 27th, 2026
+The two datasets that maximized the total number of tissues are: GTEx and E-MTAB-6081 with a total of 8 tissues.    \
+These tissues are: brain, colon, esophagus, heart, kidney, liver, pancreas, and stomach.                            \
+There aren't any NAs in either datasets. There were, however, many zeros in the datasets. I don't remember if that is problematic, so I have two sets of each dataset. One where rows/columns containing more than 50% 0's were removed. The other didn't have this filter applied.\
+For the human datasets: the non-filtered dataset contains 52,970 genes and the filtered dataset had 38,238 genes. For the mice datasets: the non-filtered dataset contains 47,531 genes and the filtered dataset had 13,8948 genes.\
+I've only taken a lot at all possible combinations from six datasets: GTEx, HPA, E-MTAB-1733, MGI, Tabula Muris, and E-MTAB-6081.\
+I also have a document containing the information you wanted me to collect for each dataset.
+
+## Notes
+- Try to understand why the number of genes in the datasets are so high. Might be because these datasets have genes that are non-protein encoding
+- Try to understand the gene name format in GTEx. It is the ENSMBL version.
+- Transcripts: different RNAs
+- Try to understand why there are repeats in the tissues for E-MTAB-6081. It might correspond to different developmental stages or if they are replicates.
+
+## To Do
+- Make sure we don't have repeating information for the same gene. Like the same gene, but from different version doesn't appear.
+- Determine if there are non-protein encoding genes.
+- Come up with a table for both species that only focuses on the shared tissues. Columns should be tissues. Rows should be genes. Average whatever is necessary. Add one more column that categorizes what type of gene the gene is. Use BioMart/Type.\
+
+# May 28th, 2026
+For the GTEx data, we saw that it was formatted as "ENSG00000290825.2", where ".2" indicates the ENSMBL version. I determined that there were no duplicated genes in the dataset.\
+The number of genes in both datasets is so high because some genes are non-protein encoding.\
+The repeats in tissues for E-MTAB-6081 are because they correspond to different mice. I'm not entirely sure what "199" might mean, but the numbers 1-13 correspond to tissues for the first mice, 14-26 for the second mice, and 27-39 for the third mice.\
+
+## To Do
+- Identify which samples were kept and discarded from the filtering.
+- Try to calcualte the tissue expression divergence scores.
+
+# May 29, 2026
+I identified the number of genes that were dropped (43) and the genes that were dropped for GTEx. Those can be found in the droppedGenes.txt file. I ran all of these genes on BioMart, and nothing came up. I looked up one of the genes, ENSG00000287139, and Ensembl says "this identifier is not in the current EnsEMBL database" and the ID is retired. The same thing is true for the genes that were dropped for E-MTAB-6081. There were 4,143 genes that were dropped. This was before I filtered for protein-coding genes.
+
+## Notes
+- Keep as many genes as possible. Don't drop genes.
+- Samples = Tissues
+- Double-check that all tissues are adult tissues.

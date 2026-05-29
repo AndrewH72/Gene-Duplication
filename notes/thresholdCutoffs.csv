@@ -1,0 +1,7 @@
+,Avg_QN_TPM,Avg_QN_TPM
+,min,max
+Threshold Level,,
+Below Cutoff,0.0,0.4
+Low,0.5,10.0
+Medium,11.0,1000.0
+High,1001.0,202247.0

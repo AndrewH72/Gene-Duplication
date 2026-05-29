@@ -1,0 +1,187 @@
+GTEx - Human (31 tissues and 74,628 genes):
+Gene Format: ENSG00000210196.2
+adipose tissue
+adrenal gland
+bladder
+blood
+blood vessel
+bone marrow
+brain
+breast
+cervix uteri
+colon
+esophagus
+fallopian tube
+heart
+kidney
+liver
+lung
+muscle
+nerve
+ovary
+pancreas
+pituitary
+prostate
+salivary gland
+skin
+small intestine
+spleen
+stomach
+testis
+thyroid
+uterus
+vagina
+
+E-MTAB-1733 - Human (27 tissues and 43,723 genes):
+Gene Format: ENSG00000000003
+sadipose tissue
+adrenal gland
+animal ovary
+appendix
+bladder
+bone marrow
+cerebral cortex
+colon
+duodenum
+endometrium
+esophagus
+gall bladder
+heart
+kidney
+liver
+lung
+lymph node
+pancreas
+placenta
+prostate
+salivary gland
+skin
+small intestine
+spleen
+stomach
+testis
+thyroid
+
+HPA - Human (51 tissues and 20,162 genes):
+Gene Format: ENSG00000000003
+adipose tissue
+adrenal gland
+amygdala
+appendix
+basal ganglia
+blood vessel
+bone marrow
+breast
+cerebellum
+cerebral cortex
+cervix
+choroid plexus
+colon
+duodenum
+endometrium
+epididymis
+esophagus
+fallopian tube
+gallbladder
+heart muscle
+hippocampal formation
+hypothalamus
+kidney
+liver
+lung
+lymph node
+midbrain
+ovary
+pancreas
+parathyroid gland
+pituitary gland
+placenta
+prostate
+rectum
+retina
+salivary gland
+seminal vesicle
+skeletal muscle
+skin
+small intestine
+smooth muscle
+spinal cord
+spleen
+stomach
+testis
+thymus
+thyroid gland
+tongue
+tonsil
+urinary bladder
+vagina
+
+MGI - Mouse (97 tissues and 51,733 genes):
+Gene Format: ENSMUSG00000109644
+heart
+hippocampus
+liver
+lung'
+spleen
+thymus
+
+E-MTAB-6081 - Mouse (37 tissues and 47,531 genes):
+Gene Format: ENSMUSG00000000001
+pancreas
+liver
+stomach
+duodenum
+jejunum
+ileum
+colon
+kidney
+heart
+esophagus
+brain
+pancreas
+liver
+stomach
+duodenum
+jejunum
+ileum
+colon
+kidney
+quadriceps
+thymus
+heart
+esophagus
+brain
+pancreas
+liver
+stomach
+duodenum
+jejunum
+ileum
+colon
+kidney
+quadriceps
+thymus
+heart
+esophagus
+brain
+
+Tabula-Muris - Mouse (19 tissues and 54,357 genes):
+Gene Format: 0610005C13Rik 
+bone
+brain
+brown adipose tissue
+gonadal adipose tissue
+heart
+kidney
+limb
+liver
+lung
+marrow
+marrow adipose tissue
+na
+pancreas
+skin
+small
+spleen
+subcutaneous adipose tissue
+white blood cells
