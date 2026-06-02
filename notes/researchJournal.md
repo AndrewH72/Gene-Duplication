@@ -71,3 +71,6 @@ I created my own functions to calculate the Euclidean and Pearson distance, and 
 When I appended these values onto the expression profiles for both humans and mice, I used my own functions.
 
 There were some IDs that were in the ortholog table, but not in the dataframe and those IDs have NaNs for the distance columns.
+
+# June 2, 2026
+I emailed Dr. Alvarez-Ponce about
