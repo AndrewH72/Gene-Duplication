@@ -73,4 +73,20 @@ When I appended these values onto the expression profiles for both humans and mi
 There were some IDs that were in the ortholog table, but not in the dataframe and those IDs have NaNs for the distance columns.
 
 # June 2, 2026
-I emailed Dr. Alvarez-Ponce about
+I emailed Dr. Alvarez-Ponce about my progress with the distance functions, and appending those columns onto the expression profiles. He emailed back saying that it makes more sense to append those columns onto the ortholog table file, and I agree, that does make more sense. By doing this, I also save memory and computational time by not having to rewrite the same data to both species' expression profile.
+
+Another thing that Dr. Alvarez-Ponce pointed out was that the TEC column was completely filled by 0's. After looking back at the function I create for it, I realized that the logic was incorrect. Before, I only made use of the binary AND operation on the binary NOT of the secondary species dataframe. This just doesn't make sense. The new logic makes use of binary XOR to extract only the tissues in either of the dataframes, and then using binary AND on the species we want to find their unique tissues for. The output of this function matches the outputs of my own manual calculations.
+
+Dr. Alvarez-Ponce discovered that E-MTAB-6081 was not in TPM, it was actually in TP100K, even though the file said it was TPM. So, all I had to do was multiply the dataset by 10 to get it to TPM, and then all files dependent on E-MTAB-6081 were updated to reflect this change.
+
+## Notes
+- Test out Euclidean distance with normalization.
+- Re-read Pearson paper (Pereira et al., 2009) to see range of Pearson distance.
+- GOC correlates with being a parental or daughter copy.
+- The copy with the highest GOC score is the parental, and the one with the lower GOC score is the daughter copy.
+- E-MTAB-6081 is in RPKM, while GTEx is in TPM. 
+
+## To Do
+- Start doing basic statistical analysis of data (mean, median, mode, etc) of each ortholog type. A preliminary analysis.
+- Go to orthologTableDist and try to identify which species experienced a duplication in the one-to-many. Duplicated species ID will appear more than once. 
+- Convert E-MTAB-6081 to TPM and recalculate the distance values.
