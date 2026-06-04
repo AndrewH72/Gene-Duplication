@@ -93,3 +93,5 @@ Dr. Alvarez-Ponce discovered that E-MTAB-6081 was not in TPM, it was actually in
 
 # June 3, 2026
 I created a column in the orthologTableDist.csv/parquet file that describes which organism was duplicated for one-to-many orthologs. "Human", "Mouse", and "NA" are the only values in the column. I took a deeper look into the "NA" values and it are genes that are labeled as one-to-many orthologs, but do not contain duplicated genes. These "NA" one-to-many orthologs are actually one-to-one orthologs. This could be because of a mislabel or the duplicated genes weren't included in the BioMart table.
+
+Also added in Euclidean and Pearson distance with Euclidean normalization columns to the orthologTableDist files. This is to see if normalization of the data will have any affect on our results.
