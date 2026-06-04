@@ -90,3 +90,6 @@ Dr. Alvarez-Ponce discovered that E-MTAB-6081 was not in TPM, it was actually in
 - Start doing basic statistical analysis of data (mean, median, mode, etc) of each ortholog type. A preliminary analysis.
 - Go to orthologTableDist and try to identify which species experienced a duplication in the one-to-many. Duplicated species ID will appear more than once. 
 - Convert E-MTAB-6081 to TPM and recalculate the distance values.
+
+# June 3, 2026
+I created a column in the orthologTableDist.csv/parquet file that describes which organism was duplicated for one-to-many orthologs. "Human", "Mouse", and "NA" are the only values in the column. I took a deeper look into the "NA" values and it are genes that are labeled as one-to-many orthologs, but do not contain duplicated genes. These "NA" one-to-many orthologs are actually one-to-one orthologs. This could be because of a mislabel or the duplicated genes weren't included in the BioMart table.
