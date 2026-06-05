@@ -95,3 +95,27 @@ Dr. Alvarez-Ponce discovered that E-MTAB-6081 was not in TPM, it was actually in
 I created a column in the orthologTableDist.csv/parquet file that describes which organism was duplicated for one-to-many orthologs. "Human", "Mouse", and "NA" are the only values in the column. I took a deeper look into the "NA" values and it are genes that are labeled as one-to-many orthologs, but do not contain duplicated genes. These "NA" one-to-many orthologs are actually one-to-one orthologs. This could be because of a mislabel or the duplicated genes weren't included in the BioMart table. The number of the duplicated species' genes was also noted. For example if there was a human one-to-many ortholog, then the column for the number of human duplicated genes would be x and the number of mouse duplicated genes would 1.
 
 Also added in Euclidean and Pearson distance with Euclidean normalization columns to the orthologTableDist files. This is to see if normalization of the data will have any affect on our results.
+
+# June 4, 2026
+I had a meeting with Dr. Alvarez-Ponce, and we found out that I incorrectly performed the Euclidean normalization. We also found out that I switched the species name for which species was duplicated for one-to-many orthologs. For the Euclidean normalization, I incorrectly believed dividing by 1,000 would be enough because the sum of all the columns would be 1,000,000 and the square root of 1,000,000 is 1,000. However, what I didn't realize is that I needed to first square each individual element in a column before summing it and then rooting the sum. I have since corrected the mistake. The switching of the species name was also an easy fix. I also fixed the order of the columns to be consistent.
+
+From there, I performed a log2(x+1) transformation on both expression profiles since AI said this was a common method of normalization. I then calculated the Euclidean distance on this log-transformed data.
+
+
+## Notes for Meeting:
+- In the last paragraph of the conclusion section, Piasecka et al stated that Euclidean distance paired with Euclidean normalization is a superior metric to compare expression conservation.
+- Pearson distance is unaffected by the type of normalization applied.
+- Euclidean distance with Euclidean normalization values are significantly lower for broadly-expressed genes than for organ-specific genes.
+- Euclidean distance with Z-Normalization was not affecte by organ specificity. But it does have higher scores for random pairs.
+- If a dataset has more broadly-expressed genes than it is more likely to be underestimated.
+
+# Notes:
+- Can ask AI for help interpreting a paper.
+- Tau describes tissue-specificity
+- We should try doing Euclidean distance on log2-transformed expression values
+- Fix Euclidean normalization. I should be squaring all the individual elements before summing them.
+- Fix my labels for the duplicated species. It looks like I swapped the labels, so "Human" should be "Mouse" and "Mouse" should be "Human."
+- Make the order Human and then Mouse.
+- For the statistical analysis, fill in a table where I have different category of genes (one-to-one, one-to-many in human GOC=0, one-to-many in human GOC=25, etc.., one-to-many in mouse GOC=0, etc.., many-to-many)and put the number, mean, median for each of our columns
+- Perform a statistical test with each pair of categories.
+- Find new papers if I ever have eany free time.
