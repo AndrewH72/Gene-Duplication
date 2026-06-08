@@ -109,7 +109,7 @@ From there, I performed a log2(x+1) transformation on both expression profiles s
 - Euclidean distance with Z-Normalization was not affecte by organ specificity. But it does have higher scores for random pairs.
 - If a dataset has more broadly-expressed genes than it is more likely to be underestimated.
 
-# Notes:
+## Notes:
 - Can ask AI for help interpreting a paper.
 - Tau describes tissue-specificity
 - We should try doing Euclidean distance on log2-transformed expression values
@@ -124,3 +124,21 @@ From there, I performed a log2(x+1) transformation on both expression profiles s
 I filled out a table provided to me by Dr. Alvarez-Pone (data/distances.xlsx). In the provided document, I was asked to find the number, median, and mean of category of genes (one2one, one2many, many2many, one2many GOC = 0, etc.). I also performed a Mann-Whitney U Test on pairs of gene categories (one2one vs one2many in humans, one2many in humans with GOC = 0 vs one2many in humans with GOC = 25, etc). During these Mann-Whitney U Tests, I saw that the p-value for the Pearson Distance values all came out as NaN. With some digging, I discovered that this happens because either one of or both of the groups has zero variance (identical values for all tissues) or one of or both of the groups contains a NaN itself. The problem was the former. I thought I could either replace these NaNs with a 1 (indicating no correlation), a 2 (indicated a strong negative correlation), or drop these rows entirely. Dr. Alvarez-Ponce said it is standard to drop them, so I did. The analysis ran smoothly afterwards.
 
 Three categories for the Mann-Whitney U Tests were corrected. I fixed the Pearson distance values for those categories, and then I filled in the same data for the other four distance metrics (Euclidean distance, Euclidean distance w/ Euclidean normalization, Euclidean distance w/ log2 transformation, Euclidean distance, TEC).
+
+## To Do:
+- double check the distances to make sure they are calculated correctly
+- randomly pick two genes and calculate their distances. do this 10K times.
+
+# June 6, 2026
+I am going through all of my distance functions, and making sure that they are correctly calculating those values. They are not. For TEC, I misread one of the variables and that threw off the entire calculation. It turns out the formula is more nuanced than I thought, and there are actual edge-cases that I need to consider. One of these edge cases is when the total number of tissues that gene I and/or gene J are expressed in equal 0. With the formula for TEC, if this happens, we end up dividing by 0 and that's a problem. So now I need to consider what the TEC value should be for those cases. **I am going to ask Dr. Alvarez-Ponce about this.**
+
+There is a TEC formula that considers the level of expression of a gene. We are still going to run into the same problem when gene I and/or gene J's total number of expressed tissues is 0, but we are going to capture more information than the previous TEC formula that we are using. **I am going to ask Dr. Alvarez-Ponce about this.**
+
+# June 8, 2026
+There were a lot of changes that I made for the distance calculations:
+- Euclid Dist: I changed my own implementation of Euclidean distance to Numpy's implementation (np.linalg.norm). The reason I did this was because Numpy's implementation was faster and more precise.
+- Euclid Dist w/ Euclid Norm: Turns out that I was normalizing by the column and not by the row. I'm not sure why, but I have since changed that. 
+- Pearson Dist: I also changed my own implementation of Pearson distance to SciPy's implementation (scipy.spatial.distance.correlation). My own implementation was precise up to a certain degree, so using SciPy's would be much better.
+- TEC: Confirmed from Dr. Alvarez-Ponce that I should return NaN anytime a divide by zero occurs.
+
+For the data itself, I also changed the way that merged files. Before, I merged on only one column and did an outer merge. This blew up the resulting dataframe (~3 million rows!). I changed it to merge on both ID columns and to perform a left merge. This made sure that only IDs that were contained in the ortholog table were kept.
