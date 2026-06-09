@@ -146,3 +146,10 @@ For the data itself, I also changed the way that merged files. Before, I merged 
 I redid the code that generates the Excel file. Previously, I would copy-and-paste the corresponding values, but that is not optimal at all. Now, everything is semi-automatic. I don't really understand why the Excel file won't overwrite itself, but everytime I want to make a change I need to delete the old Excel file and then run the code to generate a new one. But it works!
 
 Now I have to double-check everything to make sure it's all actually correct.
+
+# June 9, 2026
+While looking over the Euclidean normalization technique that I performed on the data, I had doubts on whether I should've normalized by the columns or the rows. I read online that row-normalization may result in information lose, and that would definitely affect the results of our analysis, but reading over the paper for Euclidean normalization, performing it by rows is what they did.
+
+The one-to-one genes have fewer NAs than every other group. Since these genes have not experienced a duplication event, the gene must be fully working to ensure that nothing goes wrong. We see very few of these genes having low expression profiles. With the duplicated genes, the workload can be split between them all, so expression doesn't need to be as high.
+
+EuclidDist and EuclidDistLog have the same number of rows. This is because these metrics aren't dividing by anything, so expression profiles that are all 0 don't cause issues for these columns. EuclidDistNorm and PearDist have the same number of rows. Since these columns are dividing the expression profile by some value, they run into trouble with expression profiles that are all 0. TEC doesn't have the same number of rows as any other metric. Similarly, TEC runs into trouble for all 0 expression profiles, but it also runs into trouble when expression profiles are below 1, resulting in essentially an all 0 expression profile.
