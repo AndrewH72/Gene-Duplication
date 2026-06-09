@@ -142,3 +142,7 @@ There were a lot of changes that I made for the distance calculations:
 - TEC: Confirmed from Dr. Alvarez-Ponce that I should return NaN anytime a divide by zero occurs.
 
 For the data itself, I also changed the way that merged files. Before, I merged on only one column and did an outer merge. This blew up the resulting dataframe (~3 million rows!). I changed it to merge on both ID columns and to perform a left merge. This made sure that only IDs that were contained in the ortholog table were kept.
+
+I redid the code that generates the Excel file. Previously, I would copy-and-paste the corresponding values, but that is not optimal at all. Now, everything is semi-automatic. I don't really understand why the Excel file won't overwrite itself, but everytime I want to make a change I need to delete the old Excel file and then run the code to generate a new one. But it works!
+
+Now I have to double-check everything to make sure it's all actually correct.
