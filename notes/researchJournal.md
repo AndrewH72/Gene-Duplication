@@ -155,4 +155,7 @@ The one-to-one genes have fewer NAs than every other group. Since these genes ha
 EuclidDist and EuclidDistLog have the same number of rows. This is because these metrics aren't dividing by anything, so expression profiles that are all 0 don't cause issues for these columns. EuclidDistNorm and PearDist have the same number of rows. Since these columns are dividing the expression profile by some value, they run into trouble with expression profiles that are all 0. TEC doesn't have the same number of rows as any other metric. Similarly, TEC runs into trouble for all 0 expression profiles, but it also runs into trouble when expression profiles are below 1, resulting in essentially an all 0 expression profile.
 
 # June 10, 2026
-Moved onto the next step of the process: picking random human-mouse gene pairs and calculating the distance metrics on them. We picked 10,000 samples, and this group will act as one of our control groups. Since most of these genes probably won't be orthologs, we expect them to have higher distance metrics.
+Moved onto the next step of the process: picking random human-mouse gene pairs and calculating the distance metrics on them. We picked 10,000 samples, and this group will act as one of our control groups. Since most of these genes probably won't be orthologs, we expect them to have higher distance metrics. Of the 10,000 samples only 3 are orthologs.
+
+# June 11, 2026
+Double-checked that the calculations for the 10,000 randomly picked genes are correct.
