@@ -159,3 +159,10 @@ Moved onto the next step of the process: picking random human-mouse gene pairs a
 
 # June 11, 2026
 Double-checked that the calculations for the 10,000 randomly picked genes are correct.
+
+Did the first to do. Super easy to add in the code.
+
+## To Do:
+- Add another line to each page "random pairs". Just identify the median and mean. We would expect them to have the biggest distance.
+- DAP will let me know what pvalue tests to add to the table.
+- From the orthologTable.csv only focus on one-to-many, and derive a table for genes that duplicated in mouse and one in human. Look for trios and identify parental/daughter copies using the GOC score.
