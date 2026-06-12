@@ -178,3 +178,6 @@ Changed the version, and there are no mismatches.
 - To address the problem, I should add another column with the human GOC score to the orthologTable.
 - Generate the reciprical table from an Ensembl version closest to our normal table (Jan 28, 2026).
 - Use the Ensembl 115 version.
+
+# June 12, 2026
+I identified the parental and daughter copies for orthologs, following the rules above.
