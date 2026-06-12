@@ -162,7 +162,19 @@ Double-checked that the calculations for the 10,000 randomly picked genes are co
 
 Did the first to do. Super easy to add in the code.
 
+There are mismatches. This could be because we are looking at different versions of the same data.
+
+Changed the version, and there are no mismatches.
+
+## Notes
+- GOC: looks at two genes upstream and downstream our gene of interest.
+- Potential problem: Since the score is given with a human gene as reference, when we look at one-to-many duplicated in mouse genes, then the GOC score might not be correctly reflecting the GOC score for humans, with mouse as reference.
+
 ## To Do:
 - Add another line to each page "random pairs". Just identify the median and mean. We would expect them to have the biggest distance.
 - DAP will let me know what pvalue tests to add to the table.
-- From the orthologTable.csv only focus on one-to-many, and derive a table for genes that duplicated in mouse and one in human. Look for trios and identify parental/daughter copies using the GOC score.
+- From the orthologTable.csv only focus on one-to-many, and derive a table for genes that duplicated in mouse and one in human. Look for trios and identify parental/daughter copies using the GOC score. Each line should be a trio (reference species, duplicated species parent, duplicated species daughter, GOC parent, GOC daughter, distance-parent, distance-daughter (the distance metrics come from the orthologTable)). if there aren't one-to-two copies then the daughter copy is the gene with the lowest, the parental is the one with the lowest, but make sure they have metrics. if there are duplicates pick one at random. skip if the GOC scores are the same.
+- count how many cases the distance is larger in the parental or the daughter
+- To address the problem, I should add another column with the human GOC score to the orthologTable.
+- Generate the reciprical table from an Ensembl version closest to our normal table (Jan 28, 2026).
+- Use the Ensembl 115 version.
