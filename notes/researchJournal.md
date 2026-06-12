@@ -181,3 +181,8 @@ Changed the version, and there are no mismatches.
 
 # June 12, 2026
 I identified the parental and daughter copies for orthologs, following the rules above.
+I identified the number of genes where the parental copy had higher distances for all metrics, where the daughter copy had higher distances for all metrics, and when they were both equal for all metrics.
+
+## Notes
+- Count how many times daughter has a higher distance than the parental, vice versa, and for the same. Do this for each of the metrics and separately for human and mouse.
+- Binomial test
