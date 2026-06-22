@@ -301,3 +301,4 @@ I identified the number of genes where the parental copy had higher distances fo
 # June 22, 2026
 1. Added correlation (spearman rho) and pvalue columns to each distance metric in the distanceTable.
 2. Added GO information to the orthologTable. Now includes the GO Accession Term, label, and whether the gene is under/overrepresented in the dataset.
+3. Added Mann-Whitney U Test p-values for the parental-daughter copies to the distanceTable.
