@@ -302,3 +302,16 @@ I identified the number of genes where the parental copy had higher distances fo
 1. Added correlation (spearman rho) and pvalue columns to each distance metric in the distanceTable.
 2. Added GO information to the orthologTable. Now includes the GO Accession Term, label, and whether the gene is under/overrepresented in the dataset.
 3. Added Mann-Whitney U Test p-values for the parental-daughter copies to the distanceTable.
+4. Went back and aggregated the GO terms, labels, and +/-.
+
+## Notes
+- Add in a dedicated results section to the presentation.
+- DAP comes back 07/08.
+- If I have nothing else to do, start writing the paper. Start with the methods and results. Once I have those, move to the introduction and discussion. Write the abstract at the very end.
+- Calculate the dN/dS values. Will probably do with DAP.
+- More genes in mouse, mouse will be more likely to be significant. Increases power.
+- One2many evolve faster than one2one. Significant difference.
+- Looking at correlations, parental-daughter analysis, GOC analysis is all new.
+
+## To Do:
+- Go back and aggregate the GO terms into one line.
