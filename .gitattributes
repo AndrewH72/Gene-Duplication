@@ -8,3 +8,5 @@ data/humanParalogMasterTable.csv filter=lfs diff=lfs merge=lfs -text
 data/humanParalogMasterTable.parquet filter=lfs diff=lfs merge=lfs -text
 data/mouseParalogMasterTable.csv filter=lfs diff=lfs merge=lfs -text
 data/mouseParalogMasterTable.parquet filter=lfs diff=lfs merge=lfs -text
+data/humanParalogy.txt filter=lfs diff=lfs merge=lfs -text
+data/mouseParalogy.txt filter=lfs diff=lfs merge=lfs -text
